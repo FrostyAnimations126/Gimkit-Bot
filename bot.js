@@ -26,7 +26,7 @@ async function answerQuestion() {
 	//Element 0 is the question. 1-4 are the answer choices.
 	let elements = document.querySelectorAll("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div")
 
-	let questionName = elements[0].innerHTML
+	setTimeout(function(){let questionName = elements[0].innerHTML}, 100)
 	let index = 1
 
 	if (results[questionName]) {
