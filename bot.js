@@ -15,35 +15,35 @@ let multiplier = [undefined, 50, 300, 2e3, 12e3, 85e3, 7e5, 65e5, 65e6, 1e9]
 
 //TODO: Handle view correct answer setting being off.
 let results = {}
-const sleep = m => new Promise(r => setTimeout(r, m))
+const botSleep = m => new Promise(r => setTimeout(r, m))
 
 
 function getMoney() {
-	return Number(document.querySelector("body > div > div").innerText.split(",").join("").split("\n")[0].slice(1))
+	return Number(document.querySelector("body > div > div").innerHTML.split(",").join("").split("\n")[0].slice(1))
 }
 
 async function answerQuestion() {
 	//Element 0 is the question. 1-4 are the answer choices.
 	let elements = document.querySelectorAll("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div")
 
-	let questionName = elements[0].innerText
+	let questionName = elements[0].innerHTML
 	let index = 1
 
 	if (results[questionName]) {
 		let answer = results[questionName]
 		for (let i=1;i<elements.length;i++) {
-			if (elements[i].innerText === answer) {
+			if (elements[i].innerHTML === answer) {
 				index = i
 				break;
 			}
 		}
 	}
-		let guessing = elements[index].innerText
+		let guessing = elements[index].innerHTML
 		elements[index].click()
 	
-		await sleep(450)
+		await botSleep(450)
 	
-		let lost = document.querySelector("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div").innerText.startsWith("-")
+		let lost = document.querySelector("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div").innerHTML.startsWith("-")
 	
 		//One of shop and viewCorrectAnswer exist
 		if (!lost) {
@@ -87,19 +87,19 @@ async function answerQuestion() {
 				//TODO: Add powerups.
 				//This little bit of code does not work yet.
 				
-				await sleep(400)
+				await botSleep(400)
 				
 				let options = document.querySelectorAll("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div")
 				options[shopIndex].click()
 				
-				await sleep(400)
+				await botSleep(400)
 				
 				//Indexes 3-12 are purchase options.
 				let selections = document.querySelectorAll("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div")
 				selections[purchaseIndex + 3].dispatchEvent(new Event("mousedown", {bubbles: true, composed: true})) //Select the upgrade
-				await sleep(300)
+				await botSleep(300)
 				selections[2].click() //Buy it.
-				await sleep(300)
+				await botSleep(300)
 				document.querySelectorAll("body > div > div > div > div > div")[2].click() //Click to go back to the questions.
 			}
 			else {
@@ -110,14 +110,14 @@ async function answerQuestion() {
 		else {
 			let viewCorrectAnswer = document.querySelector("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div:nth-child(2) > span:nth-child(1) > div")
 			viewCorrectAnswer.click()
-			await sleep(400)
-			let correctAnswer = document.querySelector("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > div:nth-child(3)").innerText
+			await botSleep(400)
+			let correctAnswer = document.querySelector("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > div:nth-child(3)").innerHTML
 			results[questionName] = correctAnswer
 			let nextQuestion = document.querySelector("body > div > div > div:nth-child(3) > div:nth-child(1) > div > div > div:nth-child(2)")
 			nextQuestion = nextQuestion.firstElementChild //Not sure why the code was written like this, but OK.
 			nextQuestion.click()
 		}
-	await sleep(400)
+	await botSleep(400)
 	
 }
 //let oldlog = console.log;window.console.log = function(...data) {oldlog(...data);window.last = data}
